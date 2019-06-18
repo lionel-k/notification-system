@@ -37,7 +37,7 @@ end
   resources :notifications, only: [:index]
 ```
 
-2. Récupération des notifications d'un user `NotificationsController`
+2. Récupération des notifications d'un user dans le controller: `NotificationsController`
 
 ```ruby
 def index
@@ -52,8 +52,7 @@ En Ajax (pour optimiser le chargement de la page), récupérer la liste des noti
 4. Création des notifications.
 
 Dans un fichier `lib/create_notifications.rb`:
-- Créer une tâche qui récupèrent toutes les tâches non faites de la veille et créent des notifications.
-- La tâche serait codée de cette façon:
+- Créer une tâche qui récupèrent toutes les tâches non faites de la veille et créent des notifications. Une possible implémentation serait:
 
 ```ruby
 Task.where(done: false, due_date: Date.yesterday).each do |task|
@@ -62,7 +61,11 @@ end
 ```
 
 - Avec la `gem whenever`, programmer cette tâche tous les jours à '00:01'
-
+```ruby
+every :day, at: '00:01am' do
+  rake 'api:create_notifications'
+end
+```
 
 ### B. Les notifications sont envoyées une fois par semaine, le mardi, à l'onboardee par email.
 
@@ -90,3 +93,9 @@ end
 ```
 
 2. Avec la `gem whenever`, programmer cette tâche tous les mardi à '02:00'
+
+```ruby
+every :tuesday, at: '02:00am' do
+  rake 'api:notify_onboardee'
+end
+```
